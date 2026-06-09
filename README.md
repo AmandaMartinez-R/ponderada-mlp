@@ -42,7 +42,24 @@ feat: implementa ReLU e derivada
 
 ### Etapa 2 - Softmax e Cross-Entropy
 
-A preencher.
+Nesta etapa, implementei o softmax, a cross-entropy loss e a conversão dos rótulos para one-hot encoding. Entendi que o softmax transforma os valores finais da rede em probabilidades, enquanto a cross-entropy mede o quanto a probabilidade atribuída à classe correta está distante do ideal.
+
+Também aprendi que é importante aplicar estabilidade numérica no softmax, subtraindo o maior logit de cada linha antes da exponenciação. Além disso, usei `clip` na cross-entropy para evitar `log(0)`.
+
+Testes realizados:
+
+```text
+Softmax: as probabilidades de cada linha somam 1
+One-hot: os rótulos inteiros foram convertidos para vetores corretamente
+Cross-entropy: a loss foi calculada para um batch simples
+Status: passou
+```
+
+Commit sugerido:
+
+```text
+feat: implementa softmax e cross entropy
+```
 
 ### Etapa 3 - Inicialização dos Pesos
 
