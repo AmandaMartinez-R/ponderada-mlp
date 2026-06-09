@@ -2,6 +2,7 @@ import numpy as np
 
 from mlp.activations import relu, relu_derivative
 from mlp.losses import softmax
+from mlp.optimizers import sgd_step
 
 
 class MLP:
@@ -116,3 +117,15 @@ class MLP:
 
         self.gradients = {"dW": dW, "db": db}
         return self.gradients
+
+    def update_parameters(self):
+        """Atualiza pesos e vieses usando SGD."""
+        if not self.gradients:
+            raise ValueError("Execute o backward pass antes de atualizar os parâmetros.")
+
+        sgd_step(
+            weights=self.weights,
+            biases=self.biases,
+            gradients=self.gradients,
+            learning_rate=self.learning_rate,
+        )
