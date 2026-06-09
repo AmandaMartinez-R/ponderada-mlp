@@ -1,7 +1,7 @@
 import numpy as np
 
 from mlp.activations import relu, relu_derivative
-from mlp.losses import softmax
+from mlp.losses import cross_entropy_loss, one_hot_encode, softmax
 from mlp.optimizers import sgd_step
 
 
@@ -29,6 +29,7 @@ class MLP:
         self.biases = []
         self.cache = {}
         self.gradients = {}
+        self.history = {}
 
         self.initialize_parameters()
 
@@ -129,3 +130,72 @@ class MLP:
             gradients=self.gradients,
             learning_rate=self.learning_rate,
         )
+
+    def train_batch(self, X_batch, y_batch):
+        """Treina a rede em um mini-batch.
+
+        Parâmetros:
+            X_batch: matriz de entradas com shape (batch_size, input_size).
+            y_batch: rótulos inteiros com shape (batch_size,).
+
+        Retorno:
+            Loss média do batch após o forward pass.
+        """
+        y_true = one_hot_encode(y_batch, self.layer_sizes[-1])
+        y_pred = self.forward(X_batch)
+        loss = cross_entropy_loss(y_pred, y_true)
+
+        self.backward(y_true)
+        self.update_parameters()
+
+        return loss
+
+    def fit(self, X_train, y_train, epochs=10, batch_size=64, shuffle=True):
+        """Treina a rede usando mini-batches.
+
+        Parâmetros:
+            X_train: matriz de treino com shape (num_amostras, input_size).
+            y_train: vetor de rótulos inteiros com shape (num_amostras,).
+            epochs: quantidade de passagens completas pelo conjunto de treino.
+            batch_size: quantidade de amostras usadas em cada atualização.
+            shuffle: se True, embaralha os dados no início de cada época.
+
+        Retorno:
+            Dicionário com o histórico de loss média por época.
+        """
+        X_train = np.asarray(X_train)
+        y_train = np.asarray(y_train)
+
+        if X_train.shape[0] != y_train.shape[0]:
+            raise ValueError("X_train e y_train devem ter a mesma quantidade de amostras.")
+        if X_train.shape[0] == 0:
+            raise ValueError("O conjunto de treino não pode estar vazio.")
+        if epochs <= 0:
+            raise ValueError("epochs deve ser maior que zero.")
+        if batch_size <= 0:
+            raise ValueError("batch_size deve ser maior que zero.")
+
+        num_samples = X_train.shape[0]
+        self.history = {"loss": []}
+
+        for _ in range(epochs):
+            if shuffle:
+                indices = self.rng.permutation(num_samples)
+                X_epoch = X_train[indices]
+                y_epoch = y_train[indices]
+            else:
+                X_epoch = X_train
+                y_epoch = y_train
+
+            batch_losses = []
+
+            for start in range(0, num_samples, batch_size):
+                end = start + batch_size
+                X_batch = X_epoch[start:end]
+                y_batch = y_epoch[start:end]
+                batch_loss = self.train_batch(X_batch, y_batch)
+                batch_losses.append(batch_loss)
+
+            self.history["loss"].append(float(np.mean(batch_losses)))
+
+        return self.history
