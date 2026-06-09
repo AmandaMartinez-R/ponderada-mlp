@@ -100,7 +100,34 @@ Status: passou
 
 ### Etapa 5 - Backpropagation
 
-A preencher.
+Nesta etapa, implementei o backpropagation manual da rede. Entendi que essa é a parte em que a rede calcula quanto cada peso e cada viés contribuíram para o erro final, propagando o erro da saída de volta até as primeiras camadas.
+
+Na camada de saída, usei a simplificação do gradiente de softmax com cross-entropy. Em vez de calcular as derivadas separadamente, o gradiente inicial fica:
+
+```text
+dZ = y_pred - y_true
+```
+
+Depois disso, para cada camada, calculei os gradientes dos pesos e dos vieses usando as ativações armazenadas no forward pass:
+
+```text
+dW = A_anterior.T @ dZ / batch_size
+db = soma(dZ) / batch_size
+```
+
+Para voltar para as camadas ocultas, propaguei o gradiente pelos pesos da camada atual e multipliquei pela derivada da ReLU. Essa parte foi importante porque a ReLU bloqueia o gradiente onde o valor linear era menor ou igual a zero.
+
+Também percebi que o cache criado no forward pass é essencial para o backward pass. Sem os valores intermediários `A` e `Z`, eu não teria como calcular os gradientes de cada camada corretamente.
+
+Testes realizados:
+
+```text
+Backward: gradientes calculados para todas as camadas
+Shapes: dW e db têm os mesmos formatos de W e b
+Validação: backward exige que o forward seja executado antes
+Checagem numérica: gradientes analíticos próximos dos gradientes aproximados
+Status: passou
+```
 
 ### Etapa 6 - SGD
 

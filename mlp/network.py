@@ -1,6 +1,6 @@
 import numpy as np
 
-from mlp.activations import relu
+from mlp.activations import relu, relu_derivative
 from mlp.losses import softmax
 
 
@@ -27,6 +27,7 @@ class MLP:
         self.weights = []
         self.biases = []
         self.cache = {}
+        self.gradients = {}
 
         self.initialize_parameters()
 
@@ -76,3 +77,42 @@ class MLP:
             self.cache["A"].append(activation)
 
         return activation
+
+    def backward(self, y_true):
+        """Executa o backpropagation e calcula os gradientes da rede.
+
+        Parâmetros:
+            y_true: rótulos verdadeiros em one-hot com shape
+                (batch_size, output_size).
+
+        Retorno:
+            Dicionário com os gradientes `dW` e `db` de cada camada.
+        """
+        if not self.cache or "A" not in self.cache or "Z" not in self.cache:
+            raise ValueError("Execute o forward pass antes do backward pass.")
+
+        y_pred = self.cache["A"][-1]
+        if y_true.shape != y_pred.shape:
+            raise ValueError("y_true deve ter o mesmo shape da saída da rede.")
+
+        batch_size = y_true.shape[0]
+        dW = [None] * len(self.weights)
+        db = [None] * len(self.biases)
+
+        # Para softmax + cross-entropy, o gradiente da saída simplifica para
+        # a diferença entre a probabilidade prevista e o rótulo verdadeiro.
+        dZ = y_pred - y_true
+
+        for layer_index in reversed(range(len(self.weights))):
+            previous_activation = self.cache["A"][layer_index]
+
+            dW[layer_index] = previous_activation.T @ dZ / batch_size
+            db[layer_index] = np.sum(dZ, axis=0, keepdims=True) / batch_size
+
+            if layer_index > 0:
+                dA_previous = dZ @ self.weights[layer_index].T
+                previous_z = self.cache["Z"][layer_index - 1]
+                dZ = dA_previous * relu_derivative(previous_z)
+
+        self.gradients = {"dW": dW, "db": db}
+        return self.gradients
