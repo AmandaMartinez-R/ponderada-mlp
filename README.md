@@ -63,7 +63,38 @@ feat: implementa softmax e cross entropy
 
 ### Etapa 3 - Inicialização dos Pesos
 
-A preencher.
+Nesta etapa, implementei a inicialização dos pesos da rede na classe `MLP`. Antes de escolher a estratégia, comparei a ideia de inicializar tudo com zero, Xavier Initialization e He Initialization.
+
+Inicializar todos os pesos com zero não seria uma boa escolha, porque todos os neurônios de uma mesma camada começariam iguais e receberiam gradientes muito parecidos. Isso faria com que eles aprendessem praticamente a mesma coisa, impedindo a rede de aproveitar vários neurônios para capturar padrões diferentes.
+
+Também considerei Xavier Initialization, que costuma ser uma boa escolha para ativações como `sigmoid` e `tanh`, porque tenta manter a variância dos sinais equilibrada entre as camadas. Porém, neste projeto a ativação principal das camadas ocultas será a ReLU.
+
+Escolhi He Initialization justamente porque ela foi pensada para redes que usam ReLU. Como a ReLU zera os valores negativos, parte dos sinais deixa de passar para a próxima camada. A He Initialization compensa esse efeito usando uma escala baseada em `sqrt(2 / quantidade_de_entradas_da_camada)`, ajudando a manter os valores propagados em uma faixa mais estável durante o forward pass.
+
+A fórmula usada foi:
+
+```text
+W = valores aleatórios com média 0 e desvio padrão sqrt(2 / fan_in)
+b = zeros
+```
+
+Onde `fan_in` representa a quantidade de entradas da camada. Por exemplo, em uma camada que recebe 784 valores de entrada, os pesos dessa camada são inicializados usando `sqrt(2 / 784)`.
+
+Testes realizados:
+
+```text
+Pesos: formatos compatíveis com as camadas
+Biases: inicializados com zeros
+Reprodutibilidade: mesma seed gera os mesmos pesos
+Validação de arquitetura: redes com menos de duas camadas geram erro
+Status: passou
+```
+
+Commit sugerido:
+
+```text
+feat: adiciona inicialização de pesos
+```
 
 ### Etapa 4 - Forward Pass
 
