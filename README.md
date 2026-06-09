@@ -131,7 +131,29 @@ Status: passou
 
 ### Etapa 6 - SGD
 
-A preencher.
+Nesta etapa, implementei o Stochastic Gradient Descent (SGD), que é o algoritmo responsável por atualizar os pesos e vieses da rede usando os gradientes calculados no backpropagation.
+
+Entendi que o backpropagation apenas calcula a direção em que cada parâmetro influencia o erro, mas quem realmente altera os parâmetros é o otimizador. No caso do SGD, a atualização segue a regra:
+
+```text
+parâmetro = parâmetro - learning_rate * gradiente
+```
+
+A subtração é importante porque queremos andar na direção oposta ao gradiente, ou seja, na direção que tende a reduzir a loss. Se eu somasse o gradiente em vez de subtrair, a tendência seria aumentar o erro.
+
+Também percebi que o `learning_rate` controla o tamanho do passo. Um valor muito alto pode fazer a rede passar do ponto ideal e oscilar; um valor muito baixo pode fazer o treinamento ficar lento demais.
+
+Separei a função `sgd_step` no arquivo `optimizers.py` para manter a lógica de atualização fora da classe principal da rede. Na classe `MLP`, criei o método `update_parameters`, que usa os gradientes armazenados depois do backward pass.
+
+Testes realizados:
+
+```text
+SGD: pesos e vieses foram atualizados na direção correta
+Learning rate: mudança nos parâmetros bateu com lr * gradiente
+Validação: update_parameters exige que o backward seja executado antes
+Loss: um passo pequeno de SGD reduziu a loss em um batch simples
+Status: passou
+```
 
 ### Etapa 7 - Mini-Batch Training
 
