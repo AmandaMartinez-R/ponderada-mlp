@@ -150,7 +150,16 @@ class MLP:
 
         return loss
 
-    def fit(self, X_train, y_train, epochs=10, batch_size=64, shuffle=True):
+    def fit(
+        self,
+        X_train,
+        y_train,
+        epochs=10,
+        batch_size=64,
+        shuffle=True,
+        X_val=None,
+        y_val=None,
+    ):
         """Treina a rede usando mini-batches.
 
         Parâmetros:
@@ -159,9 +168,11 @@ class MLP:
             epochs: quantidade de passagens completas pelo conjunto de treino.
             batch_size: quantidade de amostras usadas em cada atualização.
             shuffle: se True, embaralha os dados no início de cada época.
+            X_val: matriz opcional de validação.
+            y_val: vetor opcional de rótulos de validação.
 
         Retorno:
-            Dicionário com o histórico de loss média por época.
+            Dicionário com o histórico de loss e acurácia por época.
         """
         X_train = np.asarray(X_train)
         y_train = np.asarray(y_train)
@@ -175,8 +186,26 @@ class MLP:
         if batch_size <= 0:
             raise ValueError("batch_size deve ser maior que zero.")
 
+        has_validation = X_val is not None or y_val is not None
+        if has_validation and (X_val is None or y_val is None):
+            raise ValueError("Informe X_val e y_val juntos para usar validação.")
+
+        if has_validation:
+            X_val = np.asarray(X_val)
+            y_val = np.asarray(y_val)
+
+            if X_val.shape[0] != y_val.shape[0]:
+                raise ValueError("X_val e y_val devem ter a mesma quantidade de amostras.")
+            if X_val.shape[0] == 0:
+                raise ValueError("O conjunto de validação não pode estar vazio.")
+
         num_samples = X_train.shape[0]
-        self.history = {"loss": []}
+        self.history = {
+            "loss": [],
+            "accuracy": [],
+            "val_loss": [],
+            "val_accuracy": [],
+        }
 
         for _ in range(epochs):
             if shuffle:
@@ -187,16 +216,28 @@ class MLP:
                 X_epoch = X_train
                 y_epoch = y_train
 
-            batch_losses = []
-
             for start in range(0, num_samples, batch_size):
                 end = start + batch_size
                 X_batch = X_epoch[start:end]
                 y_batch = y_epoch[start:end]
-                batch_loss = self.train_batch(X_batch, y_batch)
-                batch_losses.append(batch_loss)
+                self.train_batch(X_batch, y_batch)
 
-            self.history["loss"].append(float(np.mean(batch_losses)))
+            # Depois de treinar todos os batches, calculamos métricas da época
+            # usando os parâmetros já atualizados.
+            train_probabilities = self.predict_proba(X_train)
+            train_targets = one_hot_encode(y_train, self.layer_sizes[-1])
+            train_loss = cross_entropy_loss(train_probabilities, train_targets)
+
+            self.history["loss"].append(float(train_loss))
+            self.history["accuracy"].append(self.accuracy(X_train, y_train))
+
+            if has_validation:
+                val_probabilities = self.predict_proba(X_val)
+                val_targets = one_hot_encode(y_val, self.layer_sizes[-1])
+                val_loss = cross_entropy_loss(val_probabilities, val_targets)
+
+                self.history["val_loss"].append(float(val_loss))
+                self.history["val_accuracy"].append(self.accuracy(X_val, y_val))
 
         return self.history
 

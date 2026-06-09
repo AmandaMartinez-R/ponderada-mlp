@@ -203,7 +203,25 @@ Esse resultado não significa que a rede já está pronta para o MNIST, mas conf
 
 ### Etapa 9 - Otimização
 
-A preencher.
+Nesta etapa, preparei a rede para o processo de otimização dos hiperparâmetros. Antes, o método `fit` registrava apenas a loss de treino. Isso era pouco para comparar configurações, porque uma loss menor nem sempre mostra sozinha se a rede está classificando melhor ou se está generalizando bem.
+
+Adicionei ao histórico de treinamento as métricas de `loss`, `accuracy`, `val_loss` e `val_accuracy`. Com isso, fica mais fácil acompanhar a evolução da rede ao longo das épocas e comparar escolhas como learning rate, batch size, quantidade de neurônios e quantidade de camadas.
+
+Também adicionei validação opcional no `fit`, usando `X_val` e `y_val`. Mantive treino e validação separados para evitar misturar os dados usados na atualização dos pesos com os dados usados apenas para avaliação.
+
+Entendi que otimização não é apenas testar valores aleatórios. A ideia é observar o comportamento da loss e da acurácia: se a loss oscila muito, talvez o learning rate esteja alto; se a loss cai devagar demais, talvez o learning rate esteja baixo; se a acurácia de treino sobe muito e a validação não acompanha, pode haver overfitting.
+
+Resultados do teste com validação:
+
+```text
+Loss de treino: 0.630900 -> 0.009466
+Acurácia de treino: 0.500000 -> 1.000000
+Loss de validação: 0.649124 -> 0.010083
+Acurácia de validação: 0.500000 -> 1.000000
+Status: passou
+```
+
+Também mantive compatibilidade com chamadas antigas do `fit`, sem validação. Quando nenhum conjunto de validação é informado, as listas `val_loss` e `val_accuracy` ficam vazias.
 
 ### Etapa 10 - Experimentos Comparativos
 
