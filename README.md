@@ -157,7 +157,27 @@ Status: passou
 
 ### Etapa 7 - Mini-Batch Training
 
-A preencher.
+Nesta etapa, implementei o treinamento por mini-batches. Entendi que essa estratégia fica no meio-termo entre atualizar os pesos usando uma única amostra por vez e usar o dataset inteiro em uma única atualização.
+
+Com mini-batches, a rede calcula o forward pass, a loss, o backpropagation e o SGD usando pequenos blocos de dados. Isso deixa o treino mais eficiente e costuma tornar as atualizações mais estáveis do que usar apenas uma amostra por vez.
+
+Criei o método `train_batch`, que executa uma etapa completa de treinamento em um batch: converte os rótulos para one-hot, faz o forward pass, calcula a cross-entropy, executa o backpropagation e atualiza os parâmetros com SGD.
+
+Também criei o método `fit`, que organiza o treinamento por épocas. Em cada época, os dados podem ser embaralhados e depois divididos em mini-batches. Tomei cuidado para embaralhar `X` e `y` usando os mesmos índices, porque se eles fossem embaralhados separadamente, as entradas perderiam correspondência com seus rótulos.
+
+Nesta etapa, o histórico de treinamento passou a armazenar a loss média de cada época. Esse histórico será importante depois para gerar a curva de loss nos resultados.
+
+Testes realizados:
+
+```text
+train_batch: retorna uma loss escalar
+fit: retorna um histórico com uma loss por época
+Mini-batches: todos os exemplos são usados, inclusive o último batch menor
+Shuffle: X e y mantêm correspondência por usarem os mesmos índices
+Loss: treinamento simples reduz a loss ao longo das épocas
+Validações: entradas vazias, batch_size inválido e epochs inválido geram erro
+Status: passou
+```
 
 ### Etapa 8 - Treinamento Inicial
 
