@@ -34,12 +34,6 @@ Resultado esperado: negativos viram 0, positivos permanecem iguais
 Status: passou
 ```
 
-Commit sugerido:
-
-```text
-feat: implementa ReLU e derivada
-```
-
 ### Etapa 2 - Softmax e Cross-Entropy
 
 Nesta etapa, implementei o softmax, a cross-entropy loss e a conversão dos rótulos para one-hot encoding. Entendi que o softmax transforma os valores finais da rede em probabilidades, enquanto a cross-entropy mede o quanto a probabilidade atribuída à classe correta está distante do ideal.
@@ -53,12 +47,6 @@ Softmax: as probabilidades de cada linha somam 1
 One-hot: os rótulos inteiros foram convertidos para vetores corretamente
 Cross-entropy: a loss foi calculada para um batch simples
 Status: passou
-```
-
-Commit sugerido:
-
-```text
-feat: implementa softmax e cross entropy
 ```
 
 ### Etapa 3 - Inicialização dos Pesos
@@ -90,15 +78,25 @@ Validação de arquitetura: redes com menos de duas camadas geram erro
 Status: passou
 ```
 
-Commit sugerido:
-
-```text
-feat: adiciona inicialização de pesos
-```
 
 ### Etapa 4 - Forward Pass
 
-A preencher.
+Nesta etapa, implementei o forward pass da rede. Entendi que o forward pass é o caminho da entrada até a saída: cada camada recebe ativações da camada anterior, aplica uma transformação linear com pesos e vieses, e depois aplica uma função de ativação.
+
+Nas camadas ocultas usei ReLU, porque ela adiciona não linearidade ao modelo. Na camada final usei softmax, porque o problema é de classificação multiclasse e a saída precisa representar probabilidades para os 10 dígitos do MNIST.
+
+Também passei a armazenar os valores intermediários em `cache`, separando `Z` e `A`. Esse armazenamento será importante no backpropagation, porque os gradientes dependem dos valores calculados durante o forward pass.
+
+Testes realizados:
+
+```text
+Forward: saída com shape esperado
+Softmax: probabilidades da saída somam 1 por amostra
+Cache: ativações e valores lineares foram armazenados
+Arquitetura arbitrária: forward funciona com mais de uma camada oculta
+Status: passou
+```
+
 
 ### Etapa 5 - Backpropagation
 
