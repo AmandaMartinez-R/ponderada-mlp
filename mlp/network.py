@@ -199,3 +199,22 @@ class MLP:
             self.history["loss"].append(float(np.mean(batch_losses)))
 
         return self.history
+
+    def predict_proba(self, X):
+        """Retorna as probabilidades previstas para cada classe."""
+        return self.forward(X)
+
+    def predict(self, X):
+        """Retorna a classe prevista para cada amostra."""
+        probabilities = self.predict_proba(X)
+        return np.argmax(probabilities, axis=1)
+
+    def accuracy(self, X, y):
+        """Calcula a acurácia da rede para um conjunto de dados."""
+        y = np.asarray(y)
+        predictions = self.predict(X)
+
+        if predictions.shape[0] != y.shape[0]:
+            raise ValueError("X e y devem ter a mesma quantidade de amostras.")
+
+        return float(np.mean(predictions == y))

@@ -181,7 +181,25 @@ Status: passou
 
 ### Etapa 8 - Treinamento Inicial
 
-A preencher.
+Nesta etapa, fiz o primeiro treinamento completo da rede em um problema pequeno e controlado antes de partir para o MNIST. A ideia foi validar se todas as partes implementadas até aqui funcionam juntas: forward pass, cálculo da loss, backpropagation, SGD e treinamento por mini-batches.
+
+Também adicionei métodos de avaliação na classe `MLP`: `predict_proba`, `predict` e `accuracy`. Com eles, ficou possível medir não apenas se a loss diminui, mas também se as previsões da rede melhoram após o treinamento.
+
+Usei um dataset sintético simples com duas classes separáveis. Esse tipo de teste é útil porque, se a rede não conseguisse aprender um problema pequeno, provavelmente haveria algum erro na implementação antes mesmo de testar no MNIST.
+
+Antes do treinamento, a rede ainda fazia previsões ruins, como esperado para pesos aleatórios. Depois de treinar por algumas épocas, a loss caiu bastante e a acurácia chegou a 100% nesse conjunto simples.
+
+Resultados do teste inicial:
+
+```text
+Loss antes do treino: 0.879727
+Loss depois do treino: 0.003461
+Acurácia antes do treino: 0.500000
+Acurácia depois do treino: 1.000000
+Status: passou
+```
+
+Esse resultado não significa que a rede já está pronta para o MNIST, mas confirma que o fluxo completo de aprendizado funciona em um cenário controlado.
 
 ### Etapa 9 - Otimização
 
