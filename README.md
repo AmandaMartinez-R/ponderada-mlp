@@ -308,6 +308,61 @@ Acurácia de validação: 1.000000
 
 Esses resultados confirmam que o processo de gerar e salvar artefatos funciona. Na etapa final com MNIST, essa mesma lógica será usada para salvar curvas reais de loss e acurácia ao longo das épocas.
 
+### Etapa 12A - Treinamento no MNIST
+
+Nesta etapa, preparei o projeto para executar o treinamento real no MNIST. Até aqui, os testes tinham sido feitos com um dataset sintético, o que foi útil para validar a implementação, mas ainda não atendia ao requisito principal da atividade: treinar no MNIST e buscar pelo menos 92% de acurácia no conjunto de teste.
+
+Atualizei o arquivo `requirements.txt` com as dependências necessárias para essa fase:
+
+```text
+numpy
+tensorflow
+matplotlib
+notebook
+```
+
+A escolha de incluir `tensorflow` foi feita apenas para carregar o dataset MNIST usando `tensorflow.keras.datasets.mnist`. O treinamento da rede continua sendo feito pela implementação própria em NumPy, sem usar TensorFlow para montar modelo, calcular gradientes ou atualizar pesos.
+
+Também atualizei o notebook `notebooks/experimentos.ipynb` com uma seção específica para MNIST. Essa seção faz:
+
+```text
+Carregamento do MNIST via Keras
+Normalização dos pixels para o intervalo [0, 1]
+Transformação das imagens 28x28 em vetores de 784 posições
+Separação de 10.000 imagens para validação
+Treinamento de duas configurações diferentes
+Avaliação no conjunto de teste
+Salvamento de CSV e gráficos em results/
+```
+
+Configurações preparadas para o MNIST:
+
+```text
+MNIST A:
+Arquitetura: 784 -> 128 -> 64 -> 10
+Learning rate: 0.1
+Batch size: 128
+Épocas: 12
+
+MNIST B:
+Arquitetura: 784 -> 256 -> 128 -> 10
+Learning rate: 0.05
+Batch size: 128
+Épocas: 12
+```
+
+Ainda não executei o treinamento MNIST neste ambiente, porque o runtime atual não tinha `tensorflow`, `keras` nem `matplotlib` instalados. A execução deve ser feita depois de instalar as dependências com `pip install -r requirements.txt`.
+
+Resultados esperados após executar a seção MNIST:
+
+```text
+results/mnist_experimentos.csv
+results/mnist_loss.png
+results/mnist_accuracy.png
+```
+
+Essa etapa deixa o projeto pronto para o teste principal. Depois que o notebook for executado, preciso copiar os resultados reais para o README final e verificar se alguma configuração atingiu a meta de 92% de acurácia no teste.
+
 ### Etapa 12 - README Final
 
 A preencher.
