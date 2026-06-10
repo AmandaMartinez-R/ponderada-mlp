@@ -351,7 +351,7 @@ Batch size: 128
 Épocas: 12
 ```
 
-Ainda não executei o treinamento MNIST neste ambiente, porque o runtime atual não tinha `tensorflow`, `keras` nem `matplotlib` instalados. A execução deve ser feita depois de instalar as dependências com `pip install -r requirements.txt`.
+Na preparação inicial, o runtime atual não tinha `tensorflow`, `keras` nem `matplotlib` instalados. Por isso, deixei o notebook preparado para o caminho padrão via Keras, mas a execução real precisou de um ajuste descrito na etapa seguinte.
 
 Resultados esperados após executar a seção MNIST:
 
@@ -361,7 +361,71 @@ results/mnist_loss.png
 results/mnist_accuracy.png
 ```
 
-Essa etapa deixa o projeto pronto para o teste principal. Depois que o notebook for executado, preciso copiar os resultados reais para o README final e verificar se alguma configuração atingiu a meta de 92% de acurácia no teste.
+Essa etapa deixou o projeto pronto para o teste principal. Depois dela, executei o treinamento real no MNIST e registrei os resultados.
+
+### Etapa 12B - Execução do MNIST
+
+Nesta etapa, executei o treinamento real no MNIST. A tentativa de instalar todas as dependências com `pip install -r requirements.txt` não concluiu neste ambiente: `matplotlib` foi instalado, mas `tensorflow` não terminou de instalar mesmo após uma tentativa mais longa.
+
+Para não bloquear a validação do MLP, carreguei diretamente o arquivo `mnist.npz` hospedado no mesmo endereço usado pelo Keras:
+
+```text
+https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
+```
+
+Esse ajuste foi usado apenas para carregar os dados. O treinamento, o forward pass, o backpropagation, o cálculo dos gradientes e a atualização dos pesos continuaram sendo feitos pela implementação própria em NumPy.
+
+Usei a divisão:
+
+```text
+50.000 imagens para treino
+10.000 imagens para validação
+10.000 imagens para teste
+```
+
+Configurações executadas:
+
+```text
+MNIST A:
+Arquitetura: 784 -> 128 -> 64 -> 10
+Learning rate: 0.1
+Batch size: 128
+Épocas: 12
+
+MNIST B:
+Arquitetura: 784 -> 256 -> 128 -> 10
+Learning rate: 0.05
+Batch size: 128
+Épocas: 12
+```
+
+Resultados obtidos:
+
+```text
+MNIST A:
+Acurácia de treino: 0.988060
+Acurácia de validação: 0.973700
+Acurácia de teste: 0.974600
+Loss de teste: 0.083006
+
+MNIST B:
+Acurácia de treino: 0.979200
+Acurácia de validação: 0.970600
+Acurácia de teste: 0.968600
+Loss de teste: 0.101009
+```
+
+A melhor configuração foi a `MNIST A`, com 97,46% de acurácia no teste. Com isso, a meta mínima de 92% foi atingida.
+
+Arquivos gerados:
+
+```text
+results/mnist_experimentos.csv
+results/mnist_loss.png
+results/mnist_accuracy.png
+```
+
+Esse resultado mostra que a implementação manual do MLP conseguiu aprender o MNIST usando apenas NumPy para os cálculos da rede.
 
 ### Etapa 12 - README Final
 
