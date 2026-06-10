@@ -225,7 +225,45 @@ Também mantive compatibilidade com chamadas antigas do `fit`, sem validação. 
 
 ### Etapa 10 - Experimentos Comparativos
 
-A preencher.
+Nesta etapa, criei o notebook `notebooks/experimentos.ipynb` para organizar os primeiros experimentos comparativos. Antes de usar o MNIST, comparei duas configurações em um dataset sintético simples, porque isso permite validar o fluxo de experimentação em um ambiente controlado.
+
+Comparei duas arquiteturas diferentes mantendo o mesmo problema, a mesma divisão de treino e validação, o mesmo batch size e a mesma quantidade de épocas. A diferença principal foi o tamanho da rede e o learning rate.
+
+Configurações testadas:
+
+```text
+Configuração A:
+Arquitetura: 2 -> 8 -> 4 -> 2
+Learning rate: 0.1
+Batch size: 4
+Épocas: 40
+
+Configuração B:
+Arquitetura: 2 -> 16 -> 8 -> 2
+Learning rate: 0.05
+Batch size: 4
+Épocas: 40
+```
+
+Resultados obtidos:
+
+```text
+Configuração A:
+Loss de treino: 0.009466
+Acurácia de treino: 1.000000
+Loss de validação: 0.010083
+Acurácia de validação: 1.000000
+
+Configuração B:
+Loss de treino: 0.018731
+Acurácia de treino: 1.000000
+Loss de validação: 0.020407
+Acurácia de validação: 1.000000
+```
+
+As duas configurações conseguiram aprender o dataset sintético e chegaram a 100% de acurácia em treino e validação. A Configuração A terminou com loss menor, mesmo sendo menor, provavelmente porque o problema era simples e o learning rate maior ajudou a convergir mais rápido nesse cenário.
+
+Esse resultado ainda não define a melhor configuração para o MNIST. Ele apenas confirma que o processo de comparar arquiteturas, registrar métricas e analisar resultados já está funcionando. No MNIST, espero que as diferenças entre configurações fiquem mais relevantes.
 
 ### Etapa 11 - Resultados
 
