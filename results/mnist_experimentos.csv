@@ -1,0 +1,3 @@
+configuracao,arquitetura,learning_rate,batch_size,epochs,loss_treino,acuracia_treino,loss_validacao,acuracia_validacao,loss_teste,acuracia_teste
+MNIST A,784 -> 128 -> 64 -> 10,0.1,128,12,0.043331190567301454,0.98806,0.08791313479660744,0.9737,0.08300557250283457,0.9746
+MNIST B,784 -> 256 -> 128 -> 10,0.05,128,12,0.07077509469115978,0.9792,0.10202732478769641,0.9706,0.10100873712841235,0.9686
