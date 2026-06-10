@@ -267,7 +267,46 @@ Esse resultado ainda não define a melhor configuração para o MNIST. Ele apena
 
 ### Etapa 11 - Resultados
 
-A preencher.
+Nesta etapa, gerei os primeiros arquivos de resultados na pasta `results/`. Esses resultados ainda são preliminares, porque foram produzidos com o dataset sintético usado nos experimentos comparativos, e não com o MNIST.
+
+Mesmo assim, achei importante salvar os artefatos desde já, porque isso valida o fluxo de documentação dos resultados: uma tabela com as métricas e gráficos simples para visualizar a comparação entre configurações.
+
+Arquivos gerados:
+
+```text
+results/experimentos_comparativos.csv
+results/loss_comparativo.svg
+results/accuracy_comparativo.svg
+```
+
+O arquivo CSV registra as métricas finais das duas configurações testadas: arquitetura, learning rate, batch size, épocas, loss de treino, acurácia de treino, loss de validação e acurácia de validação.
+
+Também gerei dois gráficos em SVG:
+
+```text
+loss_comparativo.svg: compara loss final de treino e validação
+accuracy_comparativo.svg: compara acurácia final de treino e validação
+```
+
+Como o ambiente atual não tinha `matplotlib` disponível, optei por gerar os gráficos diretamente em SVG. Essa escolha evita instalar dependências nesta etapa e ainda produz arquivos que podem ser abertos no navegador ou visualizados no GitHub.
+
+Resultados registrados:
+
+```text
+Configuração A:
+Loss de treino: 0.009466
+Acurácia de treino: 1.000000
+Loss de validação: 0.010083
+Acurácia de validação: 1.000000
+
+Configuração B:
+Loss de treino: 0.018731
+Acurácia de treino: 1.000000
+Loss de validação: 0.020407
+Acurácia de validação: 1.000000
+```
+
+Esses resultados confirmam que o processo de gerar e salvar artefatos funciona. Na etapa final com MNIST, essa mesma lógica será usada para salvar curvas reais de loss e acurácia ao longo das épocas.
 
 ### Etapa 12 - README Final
 

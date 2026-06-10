@@ -1,0 +1,3 @@
+configuracao,arquitetura,learning_rate,batch_size,epochs,loss_treino,acuracia_treino,loss_validacao,acuracia_validacao
+Configuracao A,2 -> 8 -> 4 -> 2,0.1,4,40,0.009466,1.000000,0.010083,1.000000
+Configuracao B,2 -> 16 -> 8 -> 2,0.05,4,40,0.018731,1.000000,0.020407,1.000000
